@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Dashboard</title>
+  <style>
+    body { font-family: Arial; padding: 40px; background-color: #f0f0f0; }
+    .box {
+      background: white; padding: 30px; max-width: 400px; margin: auto;
+      border-radius: 10px; text-align: center;
+    }
+    button {
+      padding: 10px 20px; margin: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Welcome, <span id="empName">Loading...</span></h2>
+    <p><strong>Date:</strong> <span id="todayDate"></span></p>
+
+    <button onclick="punchIn()">Punch In</button>
+    <button onclick="punchOut()">Punch Out</button>
+
+    <div id="result" style="margin-top:20px;"></div>
+  </div>
+
+  <script>
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      alert("No user logged in. Redirecting to login page.");
+      window.location.href = "login.html";
+    }
+
+    // Set today’s date
+    document.getElementById('todayDate').innerText = new Date().toLocaleDateString();
+
+    // Fetch user details
+    fetch('http://localhost:8080/api/employees')
+      .then(res => res.json())
+      .then(users => {
+        const user = users.find(u => u.id == userId);
+        if (user) {
+          document.getElementById('empName').innerText = user.name;
+        } else {
+          alert('User not found!');
+        }
+      });
+
+    function punchIn() {
+      const time = new Date().toLocaleTimeString();
+      document.getElementById('result').innerHTML = `<p>Punched In at: <strong>${time}</strong></p>`;
+      // Optional: Send to backend here using fetch POST
+    }
+
+    function punchOut() {
+      const time = new Date().toLocaleTimeString();
+      document.getElementById('result').innerHTML += `<p>Punched Out at: <strong>${time}</strong></p>`;
+      // Optional: Send to backend here using fetch POST
+    }
+  </script>
+</body>
+</html>

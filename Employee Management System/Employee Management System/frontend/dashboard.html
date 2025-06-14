@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+    th { background-color: #f4f4f4; }
+    input, button { padding: 5px; }
+    .actions button { margin: 0 5px; }
+  </style>
+</head>
+<body>
+
+  <h2>Welcome, Admin!</h2>
+  <h3>Employee Management</h3>
+
+  <table id="employeeTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Punch In</th>
+        <th>Punch Out</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Filled by JS -->
+    </tbody>
+  </table>
+
+  <script>
+    // Mock employee data (replace with fetch from backend)
+    let employees = [
+      {
+        id: 1,
+        name: "Piyush",
+        email: "piyush@example.com",
+        role: "Developer",
+        punchIn: "09:00 AM",
+        punchOut: "05:00 PM",
+        date: "2025-06-14"
+      },
+      {
+        id: 2,
+        name: "Neha",
+        email: "neha@example.com",
+        role: "Designer",
+        punchIn: "10:00 AM",
+        punchOut: "06:00 PM",
+        date: "2025-06-14"
+      }
+    ];
+
+    function renderTable() {
+      const tbody = document.querySelector('#employeeTable tbody');
+      tbody.innerHTML = '';
+
+      employees.forEach((emp, index) => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td><input value="${emp.name}" onchange="updateField(${index}, 'name', this.value)" /></td>
+          <td><input value="${emp.email}" onchange="updateField(${index}, 'email', this.value)" /></td>
+          <td><input value="${emp.role}" onchange="updateField(${index}, 'role', this.value)" /></td>
+          <td>${emp.punchIn}</td>
+          <td>${emp.punchOut}</td>
+          <td>${emp.date}</td>
+          <td class="actions">
+            <button onclick="deleteEmployee(${index})">Delete</button>
+          </td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    function updateField(index, field, value) {
+      employees[index][field] = value;
+      console.log(`Updated employee ${index + 1}:`, employees[index]);
+    }
+
+    function deleteEmployee(index) {
+      if (confirm("Are you sure you want to delete this employee?")) {
+        employees.splice(index, 1);
+        renderTable();
+      }
+    }
+
+    // Call once at load
+    renderTable();
+  </script>
+
+</body>
+</html>
